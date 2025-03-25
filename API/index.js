@@ -10,6 +10,7 @@ import {db} from "./config/database.js"
 import cors from "cors"
 import AuthRouter from "./routes/AuthRoute.js"
 import CustomerRoute from "./routes/CustomerRoute.js"
+import routes from "./routes/MonthlyBillsRoute.js"
 
 dotenv.config();
 
@@ -48,6 +49,7 @@ app.use(cors({
 app.use(express.json());
 app.use("/api/v1", AuthRouter);
 app.use("/api/v1", CustomerRoute )
+app.use("/api/v1", routes);
 
 
 
