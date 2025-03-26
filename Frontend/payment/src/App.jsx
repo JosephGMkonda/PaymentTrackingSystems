@@ -4,17 +4,24 @@ import { store } from "./features/store";
 import "./index.css"
 import Login from './pages/Login';
 import Home from './pages/Home';
+import Customers from './pages/Customers';
+import Bills from './pages/Bills'
 import ProtectedRoute from './features/ProtectedRoute'
-
+import Layout from './features/Layout'
 function App() {
   return (
     <Provider store={store}>
       <BrowserRouter>
         <Routes>
           <Route path="/login" element={<Login />} />
+          
+          
           <Route element={<ProtectedRoute />}>
-            <Route path="/" element={<Home />} />
-            
+            <Route element={<Layout />}> 
+              <Route path="/" element={<Home />} />
+              <Route path="/customers" element={<Customers />} />
+              <Route path="/bills" element={<Bills />} />
+            </Route>
           </Route>
         </Routes>
       </BrowserRouter>
