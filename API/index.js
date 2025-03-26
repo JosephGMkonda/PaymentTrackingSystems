@@ -7,6 +7,7 @@ import MonthlyBills from "./models/MonthlyBills.js"
 import session from "express-session"
 import SequelizeStore from "connect-session-sequelize"
 import {db} from "./config/database.js"
+import cookieParser from 'cookie-parser';
 import cors from "cors"
 import AuthRouter from "./routes/AuthRoute.js"
 import CustomerRoute from "./routes/CustomerRoute.js"
@@ -40,7 +41,7 @@ app.use(session({
     store: store,
     cookie: { secure: 'auto' },
 }))
-
+app.use(cookieParser());
 app.use(cors({
     credentials: true,
     origin: "http://localhost:5173",

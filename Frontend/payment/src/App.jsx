@@ -1,23 +1,25 @@
-import { useState } from 'react'
-import { BrowserRouter, Route, Routes } from 'react-router-dom'
-import Layout from './features/Layout'
-import './index.css'
-import Login from './pages/Login'
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { Provider } from 'react-redux';
+import { store } from "./features/store";
+import "./index.css"
+import Login from './pages/Login';
+import Home from './pages/Home';
+import ProtectedRoute from './features/ProtectedRoute'
 
 function App() {
-
-
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="/" element={<Layout/>}/>
-        <Route path="/login" element={<Login/>}/>
-
-      </Routes>
-    </BrowserRouter>
-   
-    
-  )
+    <Provider store={store}>
+      <BrowserRouter>
+        <Routes>
+          <Route path="/login" element={<Login />} />
+          <Route element={<ProtectedRoute />}>
+            <Route path="/" element={<Home />} />
+            
+          </Route>
+        </Routes>
+      </BrowserRouter>
+    </Provider>
+  );
 }
 
-export default App
+export default App;

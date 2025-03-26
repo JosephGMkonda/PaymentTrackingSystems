@@ -1,13 +1,15 @@
 import{createSlice, createAsyncThunk} from "@reduxjs/toolkit";
-import axios from axios;
+import axios from 'axios'
 
-const API_URL=`${process.env.BASE_URL}${process.env.API_URL}`;
+const API_URL=`${import.meta.env.VITE_BASE_URL}${import.meta.env.VITE_API_URL}`;
 
-export const Login = createAsyncThunk(
+export const LoginUser = createAsyncThunk(
     'auth/login',
     async ({username,password}, {rejectWithValue}) => {
         try {
+            console.log('Full API URL:', `${API_URL}/login`);
             const response = await axios.post(
+
                 `${API_URL}/login`,
                 {username, password},
                 {withCredentials: true}
@@ -54,12 +56,12 @@ const authSlice = createSlice({
     },
     extraReducers: (builder) => {
         builder
-            .addCase(Login.fulfilled, (state, action) => {
+            .addCase(LoginUser.fulfilled, (state, action) => {
                 state.user = action.payload;
                 state.isAuthenticated = true;
                 state.loading = false;
             })
-            .addCase(chechAuth.fulfilled, (state, action) => {
+            .addCase(checkAuth.fulfilled, (state, action) => {
                 state.user = action.payload;
                 state.isAuthenticated = !!action.payload;
             })
