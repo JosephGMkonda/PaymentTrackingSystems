@@ -15,19 +15,11 @@ const Navbar = () => {
 
      <div className="flex items-center ">
 
-        <div className="relative px-[0px]">
-        <BsFillBellFill className="text-xl"/>
-        <span className="absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 
-                        inline-flex items-center justify-center 
-                        w-5 h-5 text-xs font-bold text-white bg-red-500 rounded-full">
-         3
-        </span>
-        </div>
        
 
 
         <div className="flex items-center px-[20px]">
-            <p>Chisomo Banda</p>
+            
             <div >
             <img 
             src="personaimage2.jpg" 

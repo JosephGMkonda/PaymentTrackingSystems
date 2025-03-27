@@ -1,6 +1,8 @@
 import {Link} from 'react-router-dom'
 
-import { BsGrid3X3GapFill,BsPeopleFill,BsReception4 } from "react-icons/bs";
+import { BsGrid3X3GapFill,BsPeopleFill,BsReception4,BsBank2 } from "react-icons/bs";
+import { FaMoneyBills } from "react-icons/fa6";
+
 
 const Sidebar = () => {
 
@@ -32,14 +34,14 @@ const Sidebar = () => {
         <span className="font-bold"> Customers </span>
         
         </Link>
-        <Link to="/customers" className="flex items-center gap-[15px] py-[20px] px-[20px] cursor-pointer text-white">
-        <BsPeopleFill />
+        <Link to="/payments" className="flex items-center gap-[15px] py-[20px] px-[20px] cursor-pointer text-white">
+        <FaMoneyBills />
         <span className="font-bold"> Payments</span>
         
         </Link>
 
-        <Link to="/customers" className="flex items-center gap-[15px] py-[20px] px-[20px] cursor-pointer text-white">
-        <BsPeopleFill />
+        <Link to="/bills" className="flex items-center gap-[15px] py-[20px] px-[20px] cursor-pointer text-white">
+        <BsBank2 />
         <span className="font-bold"> Bills </span>
         
         </Link>
