@@ -5,13 +5,14 @@ import Customers from "../models/Customers.js"
 
 export const createMonthlyBill = async (req, res) => {
     try {
-        const {customerId,amount,billingMonth,dueDate,status} = req.body;
+        const { customerId, amount, billingMonth, dueDate, status } = req.body;
 
-        const cunstomer = await Customers.findById(customerId);
-        if(!cunstomer){
-            return res.status(404).json({msg: "Customer not found"})
+        const customer = await Customers.findById(customerId);
+        if (!customer) {
+            return res.status(404).json({ msg: "Customer not found" });
         }
 
+        
         const bill = await MonthlyBills.create({
             customerId,
             amount,
@@ -19,12 +20,33 @@ export const createMonthlyBill = async (req, res) => {
             dueDate,
             status
         });
-        res.status(200).json(bill);
 
         
+        const generateReferenceNumber = () => {
+            const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            let result = '';
+            for (let i = 0; i < 10; i++) {
+                result += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+            return result;
+        };
+
+    
+        const payment = await Payments.create({
+            customerId: customerId,
+            billId: bill.uuid, 
+            amount: amount,
+            paymentDate: new Date(), 
+            referenceNumber: generateReferenceNumber()
+        });
+
+        res.status(200).json({
+            bill: bill,
+            payment: payment
+        });
+
     } catch (error) {
-        res.status(500).json({msg: error.message})
-        
+        res.status(500).json({ msg: error.message });
     }
 }
 
@@ -98,11 +120,11 @@ export const searchCustomer = async (req, res) => {
             where: {
                 [Op.or]: [
                     {fullName: {[Op.like]: `%${query}%`}},
-                    {phoneNumber: {[Op.like]: `%${query}%`}}
+                    
                 ]
             }
         });
-        res.json(200)
+        res.status(200).json(customers)
 
     } catch (error) {
         res.status(500).json({msg: error.message})

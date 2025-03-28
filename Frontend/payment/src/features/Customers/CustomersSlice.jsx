@@ -91,7 +91,7 @@ const customerSlice = createSlice({
       .addCase(addCustomer.pending, (state) => {
         state.operationLoading = true;
       })
-      addCase(addCustomer.fulfilled, (state, action) => {
+      .addCase(addCustomer.fulfilled, (state, action) => {
         state.operationLoading = false;
       
       })

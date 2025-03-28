@@ -8,6 +8,7 @@ routes.post("/post", createMonthlyBill);
 routes.get("/getAll", getAllBills);
 routes.get("/getBill/:id", getBillById);
 routes.delete("/deleteBill/:id", deleteBills);
-routes.patch("/updateBill/:id",updateBills)
+routes.patch("/updateBill/:id",updateBills);
+routes.get("/search", searchCustomer);
 
 export default routes;
