@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addBill } from '../features/bills/billsSlice';
+import { addBill } from '../features/Bill/BillSlice';
 import axios from 'axios';
 
 const BillModal = ({ isOpen, onClose, billToEdit }) => {
   const dispatch = useDispatch();
-  const { operationLoading } = useSelector((state) => state.bills);
+  const operationLoading = useSelector((state) => state.bills?.operationLoading) || false;
   const [formData, setFormData] = useState({
     customerId: '',
     customerName: '',
@@ -50,7 +50,9 @@ const BillModal = ({ isOpen, onClose, billToEdit }) => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    console.log("FORM SUBMISSION TRIGGERED");
     try {
+      console.log("SUBMITTING BILLS", formData);
       await dispatch(addBill({
         customerId: formData.customerId,
         amount: parseFloat(formData.amount),
@@ -190,10 +192,13 @@ const BillModal = ({ isOpen, onClose, billToEdit }) => {
             >
               Cancel
             </button>
+
             <button
               type="submit"
               className="px-4 py-2 bg-blue-500 text-white rounded"
               disabled={operationLoading || !formData.customerId}
+
+            
             >
               {operationLoading ? (
                 <span className="flex items-center">

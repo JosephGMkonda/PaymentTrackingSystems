@@ -4,11 +4,11 @@ import {createMonthlyBill,getAllBills,getBillById,updateBills,deleteBills,search
 
 const routes = express.Router();
 
-routes.post("/post", createMonthlyBill);
-routes.get("/getAll", getAllBills);
+routes.post("/Billpost", createMonthlyBill);
+routes.get("/getAllBills", getAllBills);
 routes.get("/getBill/:id", getBillById);
 routes.delete("/deleteBill/:id", deleteBills);
-routes.patch("/updateBill/:id",updateBills);
+routes.patch("/updateBill/:uuid",updateBills);
 routes.get("/search", searchCustomer);
 
 export default routes;

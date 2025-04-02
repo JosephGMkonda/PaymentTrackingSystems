@@ -7,6 +7,7 @@ import Home from './pages/Home';
 import Customers from './pages/Customers';
 import Bills from './pages/Bills'
 import Payments from "./pages/Payments"
+import Reports from './pages/Reports';
 import ProtectedRoute from './features/ProtectedRoute'
 import Layout from './features/Layout'
 function App() {
@@ -21,8 +22,9 @@ function App() {
             <Route element={<Layout />}> 
               <Route path="/" element={<Home />} />
               <Route path="/customers" element={<Customers />} />
-              <Route path="/payments" element={<Bills />} />
+              <Route path="/payments" element={<Payments />} />
               <Route path="/bills" element={<Bills />} />
+              <Route path="/reports" element={<Reports/>}/>
             </Route>
           </Route>
         </Routes>

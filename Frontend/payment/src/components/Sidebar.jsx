@@ -46,7 +46,7 @@ const Sidebar = () => {
         
         </Link>
 
-        <Link to="/bills" className="flex items-center gap-[15px] py-[20px] px-[20px] cursor-pointer text-white">
+        <Link to="/reports" className="flex items-center gap-[15px] py-[20px] px-[20px] cursor-pointer text-white">
         <BsReception4 />
         <span className="font-bold"> Reports </span>
         

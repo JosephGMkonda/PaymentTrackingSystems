@@ -1,120 +1,98 @@
+// billsSlice.js
 import { createSlice, createAsyncThunk } from '@reduxjs/toolkit';
 import axios from 'axios';
-import { toast } from 'react-toastify';
 
-const API_URL = `${import.meta.env.VITE_API_BASE_URL}/api/v1/monthlyBills`;
+const API_URL = 'http://localhost:5000/api/v1';
 
-export const fetchBills = createAsyncThunk(
-  'bills/fetchAll',
-  async (_, { rejectWithValue }) => {
-    try {
-      const response = await axios.get(`${API_URL}/getAll`);
-      return response.data;
-    } catch (error) {
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+// Async Thunks
+export const fetchBills = createAsyncThunk('bills/fetchBills', async () => {
+  const response = await axios.get(`${API_URL}/getAllBills`);
+  return response.data;
+});
 
-export const addBill = createAsyncThunk(
-  'bills/add',
-  async (billData, { rejectWithValue }) => {
-    try {
-      const response = await axios.post(`${API_URL}/post`, billData);
-      toast.success('Monthly bill created successfully!');
-      return response.data.bill; // Return the created bill
-    } catch (error) {
-      toast.error(error.response?.data?.msg || 'Failed to create bill');
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+export const fetchCustomers = createAsyncThunk('bills/fetchCustomers', async () => {
+  const response = await axios.get(`${API_URL}/getAll`); // Add your customer endpoint
+  return response.data;
+});
 
-export const updateBill = createAsyncThunk(
-  'bills/update',
-  async ({ id, billData }, { rejectWithValue }) => {
-    try {
-      const response = await axios.patch(`${API_URL}/updateBill/${id}`, billData);
-      toast.success('Bill updated successfully!');
-      return response.data;
-    } catch (error) {
-      toast.error('Failed to update bill');
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+export const addBill = createAsyncThunk('bills/addBill', async (billData) => {
+  const response = await axios.post(`${API_URL}/Billpost`, billData);
+  return response.data;
+});
 
-export const deleteBill = createAsyncThunk(
-  'bills/delete',
-  async (id, { rejectWithValue }) => {
-    try {
-      await axios.delete(`${API_URL}/deleteBill/${id}`);
-      toast.success('Bill deleted successfully!');
-      return id;
-    } catch (error) {
-      toast.error('Failed to delete bill');
-      return rejectWithValue(error.response.data);
-    }
-  }
-);
+export const updateBill = createAsyncThunk('bills/updateBill', async ({ id, billData }) => {
+  const response = await axios.patch(`${API_URL}/updateBill/${id}`, billData);
+  return response.data;
+});
 
-const billsSlice = createSlice({
+export const deleteBill = createAsyncThunk('bills/deleteBill', async (id) => {
+  await axios.delete(`${API_URL}/deleteBill/${id}`);
+  return id;
+});
+
+const BillSlice = createSlice({
   name: 'bills',
   initialState: {
-    data: [],
-    loading: false,
+    bills: [],
+    customers: [],
+    status: 'idle',
     error: null,
-    operationLoading: false
+    currentBill: null,
+    isModalOpen: false,
+    modalType: '',
+    customerStatus: 'idle'
   },
-  reducers: {},
+  reducers: {
+    setCurrentBill: (state, action) => {
+      state.currentBill = action.payload;
+    },
+    openModal: (state, action) => {
+      state.isModalOpen = true;
+      state.modalType = action.payload;
+    },
+    closeModal: (state) => {
+      state.isModalOpen = false;
+      state.currentBill = null;
+    },
+  },
   extraReducers: (builder) => {
     builder
       .addCase(fetchBills.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.status = 'loading';
       })
       .addCase(fetchBills.fulfilled, (state, action) => {
-        state.loading = false;
-        state.data = action.payload;
+        state.status = 'succeeded';
+        state.bills = action.payload;
       })
       .addCase(fetchBills.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.payload;
+        state.status = 'failed';
+        state.error = action.error.message;
       })
-      .addCase(addBill.pending, (state) => {
-        state.operationLoading = true;
+      .addCase(fetchCustomers.pending, (state) => {
+        state.customerStatus = 'loading';
+      })
+      .addCase(fetchCustomers.fulfilled, (state, action) => {
+        state.customerStatus = 'succeeded';
+        state.customers = action.payload;
+      })
+      .addCase(fetchCustomers.rejected, (state, action) => {
+        state.customerStatus = 'failed';
+        state.error = action.error.message;
       })
       .addCase(addBill.fulfilled, (state, action) => {
-        state.operationLoading = false;
-        state.data.unshift(action.payload);
-      })
-      .addCase(addBill.rejected, (state) => {
-        state.operationLoading = false;
-      });
-      .addCase(updateBill.pending, (state) => {
-        state.operationLoading = true;
+        state.bills.push(action.payload);
       })
       .addCase(updateBill.fulfilled, (state, action) => {
-        state.operationLoading = false;
-        const index = state.data.findIndex(b => b.id === action.payload.id);
+        const index = state.bills.findIndex(bill => bill.uuid === action.payload.uuid);
         if (index !== -1) {
-          state.data[index] = action.payload;
+          state.bills[index] = action.payload;
         }
       })
-      .addCase(updateBill.rejected, (state) => {
-        state.operationLoading = false;
-      })
-      .addCase(deleteBill.pending, (state) => {
-        state.operationLoading = true;
-      })
       .addCase(deleteBill.fulfilled, (state, action) => {
-        state.operationLoading = false;
-        state.data = state.data.filter(bill => bill.id !== action.payload);
-      })
-      .addCase(deleteBill.rejected, (state) => {
-        state.operationLoading = false;
+        state.bills = state.bills.filter(bill => bill.uuid !== action.payload);
       });
-  }
+  },
 });
 
-export default billsSlice.reducer;
+export const { setCurrentBill, openModal, closeModal } = BillSlice.actions;
+export default BillSlice.reducer;

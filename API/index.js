@@ -12,6 +12,7 @@ import cors from "cors"
 import AuthRouter from "./routes/AuthRoute.js"
 import CustomerRoute from "./routes/CustomerRoute.js"
 import routes from "./routes/MonthlyBillsRoute.js"
+import paymentRouter from "./routes/PaymentsRoutes.js"
 
 dotenv.config();
 
@@ -51,6 +52,7 @@ app.use(express.json());
 app.use("/api/v1", AuthRouter);
 app.use("/api/v1", CustomerRoute )
 app.use("/api/v1", routes);
+app.use("/api/v1", paymentRouter);
 
 
 
