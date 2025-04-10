@@ -12,9 +12,9 @@ const Sidebar = () => {
         <div className=" px-[20px] py-[10px] items-center justify-center border-b-[1px] ">
             
             <div className="bg-gray-500">
-            <h1 className='text-3xl font-bold ml-2'>
-                        <span className="text-[#26344B]">Dzuwa</span>
-                        <span className="text-[rgb(255,201,71)]">Gleam</span>
+            <h1 className='text-2xl font-bold ml-2'>
+                        <span className="text-[#26344B]">Payment</span>
+                        <span className="text-[rgb(255,201,71)]">Tracker</span>
             </h1>
          </div>
 
@@ -45,12 +45,12 @@ const Sidebar = () => {
         <span className="font-bold">Payments </span>
         
         </Link>
+{/* 
+        <Link to={`/reports/${year}/${month}`} className="flex items-center gap-[15px] py-[20px] px-[20px] cursor-pointer text-white">
+  <BsReception4 />
+  <span className="font-bold"> Reports </span>
+</Link> */}
 
-        <Link to="/reports" className="flex items-center gap-[15px] py-[20px] px-[20px] cursor-pointer text-white">
-        <BsReception4 />
-        <span className="font-bold"> Reports </span>
-        
-        </Link>
 
 
 

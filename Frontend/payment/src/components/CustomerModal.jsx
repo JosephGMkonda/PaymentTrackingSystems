@@ -75,6 +75,7 @@ const CustomerModal = ({ isOpen, onClose, customerToEdit }) => {
             <input
               type="text"
               name="fullName"
+              placeholder="Enter Fullname"
               value={formData.fullName}
               onChange={handleChange}
               className="w-full p-2 border rounded"
@@ -87,6 +88,7 @@ const CustomerModal = ({ isOpen, onClose, customerToEdit }) => {
             <input
               type="text"
               name="phoneNumber"
+              placeholder="Enter phone numbe e.g +265888986375"
               value={formData.phoneNumber}
               onChange={handleChange}
               className="w-full p-2 border rounded"
@@ -99,6 +101,7 @@ const CustomerModal = ({ isOpen, onClose, customerToEdit }) => {
             <input
               type="number"
               name="accountBalance"
+              placeholder="Enter account balance e.g 0"
               value={formData.accountBalance}
               onChange={handleChange}
               className="w-full p-2 border rounded"

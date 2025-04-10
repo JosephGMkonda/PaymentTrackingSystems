@@ -1,34 +1,49 @@
 import Users from "../models/Users.js"
 import Customers from "../models/Customers.js"
-import {validateNummber}  from "./ValidateAirtelMoneyNumber.js"
-
-export const CreateCustomers = async (req, res) => {
-    const {fullName,phoneNumber,accountBalance,status} = req.body;
+import AirtelMoneyUsers from "../models/AirtelMoneyModels/AirMoneyUsers.js"
 
 
-
-    
-
-        // const validationResponse = await validateNummber(phoneNumber);
-        // console.log("Validation Response:", validationResponse);
-
-        // if (!validationResponse || !validationResponse.status || !validationResponse.status.success) {
-        //     return res.status(400).json({ msg: "Phone number is not registered with Airtel Money" });
-        // }
+const isValidAirtelNumber = (number) => {
+    const localFormat = /^09[89]\d{7}$/;         
+    const intlFormat = /^\+2659[89]\d{7}$/;      
+    return localFormat.test(number) || intlFormat.test(number);
+  };
 
 
-        await Customers.create({
-            fullName: fullName,
-            phoneNumber: phoneNumber,
-            accountBalance: accountBalance,
-            status: status,
-            UserId: req.UserId
-        })
-        
-        res.status(200).json({msg: "customer created"})
-    
-}
+  export const CreateCustomers = async (req, res) => {
+    const { fullName, phoneNumber, accountBalance, status } = req.body;
+  
+    try {
+      
+      if (!isValidAirtelNumber(phoneNumber)) {
+        return res.status(400).json({ msg: "Invalid phone number format. Use 099xxxxxxx or +26599xxxxxxx" });
+      }
+  
+      
+      const registeredUser = await AirtelMoneyUsers.findOne({ where: { phone_number: phoneNumber } });
+  
+      if (!registeredUser) {
+        return res.status(404).json({ msg: "Phone number is not registered with Airtel Money" });
+      }
+  
+      
+      await Customers.create({
+        fullName,
+        phoneNumber,
+        accountBalance,
+        status,
+        UserId: req.UserId,
+      });
+  
+      res.status(200).json({ msg: "Customer created successfully" });
+  
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ msg: "Internal server error" });
+    }
+  };
 
+  
 export const getCustomers = async  (req, res) => {
 
     try {

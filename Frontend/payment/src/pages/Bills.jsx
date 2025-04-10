@@ -21,6 +21,9 @@ function Bills() {
   const [searchTerm, setSearchTerm] = useState('');
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(null);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
+  
 
   useEffect(() => {
     dispatch(fetchBills());
@@ -60,6 +63,10 @@ function Bills() {
       bill.amount.toString().includes(searchTerm)
     );
   });
+
+  const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const currentBills = filteredBills.slice(startIndex, endIndex);
 
   return (
     <div className="container py-[20px] px-[30px]">
@@ -110,7 +117,7 @@ function Bills() {
               </tr>
             </thead>
             <tbody>
-              {filteredBills.map((bill) => (
+              {currentBills.map((bill) => (
                 <tr key={bill.uuid} className="border-b hover:bg-gray-50">
                   <td className="py-2 px-4">{bill.Customer?.fullName || 'N/A'}</td>
                   <td className="py-2 px-4">{bill.amount}</td>
@@ -146,11 +153,20 @@ function Bills() {
 
       {/* Pagination */}
       <div className="flex justify-center mt-4">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2">
+        <button 
+        onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2"
+        disabled={currentPage === 1}
+        >
           <BsChevronDoubleLeft/>
         </button>
-        <span className="px-4 py-2">1 of 1</span>
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg ml-4">
+        <span className="px-4 py-2">{currentPage} of {Math.ceil(filteredBills.length / itemsPerPage)}</span>
+       
+        <button 
+         onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredBills.length / itemsPerPage)))}
+        className="px-4 py-2 bg-blue-500 text-white rounded-lg ml-4"
+        disabled={currentPage === Math.ceil(filteredBills.length / itemsPerPage)}
+        >
           <BsChevronDoubleRight/>
         </button>
       </div>

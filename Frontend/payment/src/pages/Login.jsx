@@ -39,8 +39,8 @@ function Login() {
             <div className="w-96 p-6 shadow-lg bg-white rounded-md">
                 <div className='flex justify-center mb-6'>
                     <h1 className='text-4xl font-bold'>
-                        <span className="text-[#26344B]">Dzuwa</span>
-                        <span className="text-[rgb(255,201,71)]">Gleam</span>
+                        <span className="text-[#26344B]">Payment</span>
+                        <span className="text-[rgb(255,201,71)]">Tracker</span>
                     </h1>
                 </div>
 

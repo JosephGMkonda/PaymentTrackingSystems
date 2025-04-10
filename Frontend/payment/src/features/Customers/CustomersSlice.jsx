@@ -23,14 +23,40 @@ export const addCustomer = createAsyncThunk(
   async (customerData, { rejectWithValue }) => {
     try {
       const response = await axios.post(`${API_URL}/post`, customerData);
+      dispatch(addCustomerSuccess(response.data));
       toast.success('Customer added successfully!');
       return response.data;
     } catch (error) {
-      toast.error('Failed to add customer');
-      return rejectWithValue(error.response.data);
+
+            
+            if (error.response) {
+              const errorMessage = error.response.data.msg;
+      
+              
+              if (errorMessage === "Invalid phone number format. Use 099xxxxxxx or +26599xxxxxxx") {
+                toast.error('The phone number is not in the correct format. Please use a valid Malawi Airtel number format.');
+              } else if (errorMessage === "Phone number is not registered with Airtel Money") {
+                toast.error('The phone number is not registered with Airtel Money. Please use a registered number.');
+              } else {
+                toast.error('Failed to add customer');
+              }
+              
+              return rejectWithValue(error.response.data); 
+            } else {
+            
+              toast.error('Failed to add customer. Please check your internet connection and try again.');
+              return rejectWithValue({ msg: 'Failed to add customer due to network issues' });
+            }
+
+     
     }
   }
 );
+
+// export const addCustomerSuccess = (customer) => ({
+//   type: 'customers/addCustomerSuccess',
+//   payload: customer
+// });
 
 // Update customer
 export const updateCustomer = createAsyncThunk(
@@ -70,7 +96,11 @@ const customerSlice = createSlice({
     error: null,
     operationLoading: false
   },
-  reducers: {},
+  reducers: {
+    addCustomerSuccess: (state, action) => {
+      state.data.push(action.payload); 
+    },
+  },
   extraReducers: (builder) => {
     builder
       // Fetch Customers
@@ -124,5 +154,6 @@ const customerSlice = createSlice({
       });
   }
 });
+export const { addCustomerSuccess } = customerSlice.actions;
 
 export default customerSlice.reducer;

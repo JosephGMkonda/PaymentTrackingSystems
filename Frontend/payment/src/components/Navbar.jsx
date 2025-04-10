@@ -1,5 +1,5 @@
 import { BsFillBellFill } from "react-icons/bs";
-
+import UserImage from "../assets/UserImage.jpg";
 const Navbar = () => {
 
 
@@ -22,7 +22,7 @@ const Navbar = () => {
             
             <div >
             <img 
-            src="personaimage2.jpg" 
+            src={UserImage} 
             alt="Logo" 
             className="w-10 h-10 rounded-full object-cover"
             />

@@ -24,7 +24,8 @@ function App() {
               <Route path="/customers" element={<Customers />} />
               <Route path="/payments" element={<Payments />} />
               <Route path="/bills" element={<Bills />} />
-              <Route path="/reports" element={<Reports/>}/>
+              
+              <Route path="/reports/:year?/:month?" element={<Reports />} />
             </Route>
           </Route>
         </Routes>

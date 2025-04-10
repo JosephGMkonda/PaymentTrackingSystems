@@ -9,7 +9,7 @@ export const fetchPayments = createAsyncThunk(
     "payments/fetchPayments",
     async (_, { rejectWithValue }) => {
         try {
-            const response = await axios.get(`$((API_URL)/payments)`);
+            const response = await axios.get(`${API_URL}/payments`);
             console.log("Payments fetched successfully:", response.data)
             return response.data;
         } catch (error) {
@@ -49,32 +49,36 @@ const paymentSlice = createSlice({
         },
 
     },
-    extraReducers: {
-        [fetchPayments.pending]: (state) => {
+    extraReducers: (builder) =>{
+        builder
+        
+        .addCase(fetchPayments.pending, (state) => {
             state.loading = true;
             state.error = null;
-        },
-        [fetchPayments.fulfilled]: (state, action) => {
+        })
+        .addCase(fetchPayments.fulfilled, (state, action) => {
             state.loading = false;
             state.data = action.payload;
-        },
-        [fetchPayments.rejected]: (state, action) => {
+        })
+        .addCase(fetchPayments.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
-        },
+        })
+        
+        .addCase(getPaymentById.pending, (state) => {
+            state.loading = true;
+            state.error = null;
+        })
 
-        [getPaymentById.pending]: (state) => {
-            state.loading = true;
-            state.error = null;
-        },
-        [getPaymentById.fulfilled]: (state, action) => {
+        .addCase(getPaymentById.fulfilled, (state, action) => {
             state.loading = false;
             state.data = action.payload;
-        },
-        [getPaymentById.rejected]: (state, action) => {
+        })
+
+        .addCase(getPaymentById.rejected, (state, action) => {
             state.loading = false;
             state.error = action.payload;
-        },
+        })
 
 
     }

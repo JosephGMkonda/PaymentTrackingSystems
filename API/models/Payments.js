@@ -3,8 +3,8 @@ import {db} from "../config/database.js";
 import MonthlyBills from "./MonthlyBills.js"
 import Customers from "./Customers.js"
 
-const {DataTypes} = Sequelize;
 
+const {DataTypes} = Sequelize;
 const Payments = db.define("Payments", {
     uuid: {
         type: DataTypes.STRING,
@@ -35,5 +35,9 @@ const Payments = db.define("Payments", {
 
 Payments.belongsTo(Customers, { foreignKey: 'customerId'});
 Payments.belongsTo(MonthlyBills, {foreignKey: 'billId'});
+
+Customers.hasMany(Payments, { foreignKey: 'customerId' });
+MonthlyBills.hasMany(Payments, { foreignKey: 'billId' });
+
 
 export default Payments;

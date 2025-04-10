@@ -3,6 +3,8 @@ import authReducer from "./Authentication/AuthSlice";
 import customerReducer from "./Customers/CustomersSlice"
 import billsReducer from './Bill/BillSlice';
 import paymentReducer from './Payments/PaymentSlice'
+import analyticsReducer from './Home/AnalyticsSlice'
+import reportReducer from "./Report/reportSlice"
 
 
 
@@ -11,7 +13,9 @@ export const store = configureStore({
     auth: authReducer,
     customers: customerReducer,
     bills: billsReducer,
-    payments: paymentSlice
+    payments: paymentReducer,
+    analytics: analyticsReducer,
+    report: reportReducer
 
   }
 });

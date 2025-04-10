@@ -15,11 +15,14 @@ import 'react-toastify/dist/ReactToastify.css';
 function Customers() {
   const dispatch = useDispatch();
   const { data: customers, loading, error, operationLoading } = useSelector((state) => state.customers);
+  
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
   const [selectedCustomer, setSelectedCustomer] = useState(null);
   const [customerToDelete, setCustomerToDelete] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState(5);
 
   useEffect(() => {
     dispatch(fetchCustomers());
@@ -29,6 +32,11 @@ function Customers() {
     customer?.fullName?.toLowerCase()?.includes(searchTerm.toLowerCase()) ||
     customer?.phoneNumber?.includes(searchTerm)
   ) || [];
+
+const startIndex = (currentPage - 1) * itemsPerPage;
+const endIndex = startIndex + itemsPerPage;
+const currentCustomers = filteredCustomers.slice(startIndex, endIndex);
+
   
   const handleEdit = (customer) => {
     setSelectedCustomer(customer);
@@ -100,53 +108,65 @@ function Customers() {
             </tr>
           </thead>
           <tbody>
-            {filteredCustomers.map((customer) => (
-              <tr key={customer.uuid} className="border-b hover:bg-gray-50">
-                <td className="py-2 px-4">{customer.fullName}</td>
-                <td className="py-2 px-4">{customer.phoneNumber}</td>
-                <td className="py-2 px-4">{customer.accountBalance}</td>
-                <td className="py-2 px-4">
-                  <span className={`px-2 py-1 rounded-full text-xs ${
-                    customer.status === 'active' 
-                      ? 'bg-green-100 text-green-800' 
-                      : 'bg-red-100 text-red-800'
-                  }`}>
-                    {customer.status}
-                  </span>
-                </td>
-                <td className="py-2 px-4">
-                  <div className="flex space-x-2">
-                    <button 
-                      onClick={() => handleEdit(customer)}
-                      className="px-2 text-blue-500 hover:text-blue-700"
-                      disabled={operationLoading}
-                    >
-                      <BsFillPencilFill/>
-                    </button>
-                    <button 
-                      onClick={() => handleDeleteClick(customer)}
-                      className="px-2 text-red-500 hover:text-red-700"
-                      disabled={operationLoading}
-                    >
-                      <BsFillTrashFill/>
-                    </button>
-                  </div>
-                </td>
-              </tr>
-            ))}
-          </tbody>
+  {currentCustomers.map((customer) => (
+    <tr key={customer.uuid} className="border-b hover:bg-gray-50">
+      <td className="py-2 px-4">{customer.fullName}</td>
+      <td className="py-2 px-4">{customer.phoneNumber}</td>
+      <td className="py-2 px-4">K {customer.accountBalance}</td>
+      <td className="py-2 px-4">
+        <span className={`px-2 py-1 rounded-full text-xs ${
+          customer.status === 'active' 
+            ? 'bg-green-100 text-green-800' 
+            : 'bg-red-100 text-red-800'
+        }`}>
+          {customer.status}
+        </span>
+      </td>
+      <td className="py-2 px-4">
+        <div className="flex space-x-2">
+          <button 
+            onClick={() => handleEdit(customer)}
+            className="px-2 text-blue-500 hover:text-blue-700"
+            disabled={operationLoading}
+          >
+            <BsFillPencilFill/>
+          </button>
+          <button 
+            onClick={() => handleDeleteClick(customer)}
+            className="px-2 text-red-500 hover:text-red-700"
+            disabled={operationLoading}
+          >
+            <BsFillTrashFill/>
+          </button>
+        </div>
+      </td>
+    </tr>
+  ))}
+        </tbody>
+
         </table>
       </div>
 
       <div className="flex justify-center mt-4">
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2">
-          <BsChevronDoubleLeft/>
-        </button>
-        <span className="px-4 py-2">1 of 1</span>
-        <button className="px-4 py-2 bg-blue-500 text-white rounded-lg ml-4">
-          <BsChevronDoubleRight/>
-        </button>
-      </div>
+  <button 
+    onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+    className="px-4 py-2 bg-blue-500 text-white rounded-lg mr-2"
+    disabled={currentPage === 1}
+  >
+    <BsChevronDoubleLeft />
+  </button>
+  
+  <span className="px-4 py-2">{currentPage} of {Math.ceil(filteredCustomers.length / itemsPerPage)}</span>
+  
+  <button 
+    onClick={() => setCurrentPage(prev => Math.min(prev + 1, Math.ceil(filteredCustomers.length / itemsPerPage)))}
+    className="px-4 py-2 bg-blue-500 text-white rounded-lg ml-4"
+    disabled={currentPage === Math.ceil(filteredCustomers.length / itemsPerPage)}
+  >
+    <BsChevronDoubleRight />
+  </button>
+</div>
+
 
       <CustomerModal 
         isOpen={isModalOpen} 

@@ -6,28 +6,31 @@ import MonthlyBills from "../models/MonthlyBills.js"
 
 export const getPayments = async (req, res) => {
     try {
-        const payments = await Payments.findAll({
-            include: [
-                {
-                    model: Customers,
-                    attributes: ['fullName', 'phoneNumber']
-                },
-                {
-                    model: MonthlyBills,
-                    attributes: ['billingMonth', 'dueDate', 'status']
-                }
-                
-                
-            ]
-        })
-
-        res.status(200).json(payments)
-        
+      const payments = await Payments.findAll({
+        attributes: [
+          'uuid', 'amount', 'paymentDate',
+          'referenceNumber', 'createdAt', 'updatedAt',
+          'customerId', 'billId' 
+        ],
+        include: [
+          {
+            model: Customers,
+            attributes: ['fullName', 'phoneNumber']
+          },
+          {
+            model: MonthlyBills,
+            attributes: ['billingMonth', 'dueDate', 'status']
+          }
+        ],
+        order: [['createdAt', 'DESC']]
+      });
+  
+      res.status(200).json(payments);
     } catch (error) {
-        res.status(500).json({msg: error.message})
-        
+      res.status(500).json({ msg: error.message });
     }
-}
+  };
+  
 
 
 
